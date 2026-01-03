@@ -30,6 +30,38 @@ delong.paired.test <- function(calcs) {
   return(zscore)
 }
 
+# Runs the placements and main calculations for the unpaired DeLong's test
+#  so that they can be easily used by both the test and CI functions.
+delong.unpaired.calculations <- function(roc1, roc2) {
+  nR <- length(roc1$controls)
+  mR <- length(roc1$cases)
+
+  nS <- length(roc2$controls)
+  mS <- length(roc2$cases)
+
+  VR <- delongPlacements(roc1)
+  VS <- delongPlacements(roc2)
+
+  SRX <- sum((VR$X - VR$theta) * (VR$X - VR$theta)) / (mR - 1)
+  SSX <- sum((VS$X - VS$theta) * (VS$X - VS$theta)) / (mS - 1)
+
+  SRY <- sum((VR$Y - VR$theta) * (VR$Y - VR$theta)) / (nR - 1)
+  SSY <- sum((VS$Y - VS$theta) * (VS$Y - VS$theta)) / (nS - 1)
+
+  SR <- SRX / mR + SRY / nR
+  SS <- SSX / mS + SSY / nS
+
+  ntotR <- nR + mR
+  ntotS <- nS + mS
+  
+  d <- VR$theta - VS$theta
+  sig <- sqrt(SR + SS)
+  
+  df <- (SR + SS)^2 / ((SR^2 / (ntotR - 1)) + (SS^2 / (ntotS - 1)))
+  
+  return(list("d" = d, "sig" = sig, "df" = df))
+}
+
 # Delong's test unpaired, used by roc.test.roc
 delong.unpaired.test <- function(calcs) {
   # Input calcs is a list returned by delong.unpaired.calculations().
@@ -137,36 +169,4 @@ delongPlacements <- function(roc) {
   }
 
   return(placements)
-}
-
-# Runs the placements and main calculations for the unpaired DeLong's test
-#  so that they can be easily used by both the test and CI functions.
-delong.unpaired.calculations <- function(roc1, roc2) {
-  nR <- length(roc1$controls)
-  mR <- length(roc1$cases)
-
-  nS <- length(roc2$controls)
-  mS <- length(roc2$cases)
-
-  VR <- delongPlacements(roc1)
-  VS <- delongPlacements(roc2)
-
-  SRX <- sum((VR$X - VR$theta) * (VR$X - VR$theta)) / (mR - 1)
-  SSX <- sum((VS$X - VS$theta) * (VS$X - VS$theta)) / (mS - 1)
-
-  SRY <- sum((VR$Y - VR$theta) * (VR$Y - VR$theta)) / (nR - 1)
-  SSY <- sum((VS$Y - VS$theta) * (VS$Y - VS$theta)) / (nS - 1)
-
-  SR <- SRX / mR + SRY / nR
-  SS <- SSX / mS + SSY / nS
-
-  ntotR <- nR + mR
-  ntotS <- nS + mS
-  
-  d <- VR$theta - VS$theta
-  sig <- sqrt(SR + SS)
-  
-  df <- (SR + SS)^2 / ((SR^2 / (ntotR - 1)) + (SS^2 / (ntotS - 1)))
-  
-  return(list("d" = d, "sig" = sig, "df" = df))
 }
