@@ -211,10 +211,6 @@ na.rm=TRUE, method=NULL, ...)
   }{
     D=(V^r(\theta^r) - V^s(\theta^s)) / sqrt(S^r + S^s)
   }
-  
-  For both paired and unpaired comparisons, a confidence interval for the
-  difference in AUC is calculated using a Gaussian (normal) approximation
-  based on the estimated standard error of the difference.
 
   With \code{method="venkatraman"}, the processing is done as described
   in Venkatraman and Begg (1996) (for paired ROC curves) and Venkatraman
@@ -304,7 +300,7 @@ na.rm=TRUE, method=NULL, ...)
   \item{statistic}{the value of the Z (\code{method="delong"}) or D
     (\code{method="bootstrap"}) statistics.
   }
-  \item{conf.int}{the confidence interval of the test (returned for DeLong's test). Has an attribute \code{conf.level} specifiying the level of the test.}
+  \item{conf.int}{the confidence interval of the test (currently only returned for DeLong's test). Has an attribute \code{conf.level} specifiying the level of the test.}
   \item{alternative}{the alternative hypothesis.}
   \item{method}{the character string \dQuote{DeLong's test for two
       correlated ROC curves} (if \code{method="delong"}) or
