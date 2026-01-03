@@ -1,6 +1,6 @@
 1.19.0.1 (2025-07-31)
   * Move 'fun.sesp' definition to work around LudvigOlsen/cvms#44
-  * Unpaired DeLong confidence intervals now use t-distribution instead of Gaussian approximation
+  * Implemented confidence intervals for unpaired data in `roc.test()`
 
 1.19.0 (2025-07-30)
   * 'ci.coords' can now take the same 'input' values as 'coords' (issue #90)
