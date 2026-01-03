@@ -105,6 +105,25 @@ test_that("unpaired two.sided roc.test produces identical p values when roc curv
   expect_equal(t3upb$statistic, -t3up$statistic)
 })
 
+test_that("unpaired roc.test has confidence intervals", {
+  # Unpaired tests should now have conf.int
+  expect_true(!is.null(t1up$conf.int))
+  expect_true(!is.null(t2up$conf.int))
+  expect_true(!is.null(t3up$conf.int))
+  
+  # Check that conf.int has the expected structure
+  expect_length(t1up$conf.int, 2)
+  expect_identical(attr(t1up$conf.int, "conf.level"), 0.95)
+  
+  # Check that the difference falls within the CI
+  diff1 <- as.numeric(t1up$estimate[1] - t1up$estimate[2])
+  expect_true(diff1 >= t1up$conf.int[1] && diff1 <= t1up$conf.int[2])
+  
+  # Verify specific CI values for t1up (regression test)
+  expect_equal(t1up$conf.int[1], -0.03377797, tolerance = 1e-6)
+  expect_equal(t1up$conf.int[2], 0.2183986, tolerance = 1e-6)
+})
+
 
 test_that("one-sided roc.test work and produce expected results", {
   t1gt <- roc.test(r.wfns, r.s100b, alternative = "greater")
