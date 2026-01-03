@@ -211,6 +211,8 @@ na.rm=TRUE, method=NULL, ...)
   }{
     D=(V^r(\theta^r) - V^s(\theta^s)) / sqrt(S^r + S^s)
   }
+  For paired tests, confidence intervals use the normal distribution as in DeLong's original paper.
+  For unpaired tests, confidence intervals use the t-distribution with Welch-Satterthwaite degrees of freedom.
 
   With \code{method="venkatraman"}, the processing is done as described
   in Venkatraman and Begg (1996) (for paired ROC curves) and Venkatraman
