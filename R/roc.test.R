@@ -338,12 +338,16 @@ roc.test.roc <- function(roc1, roc2,
       }
       htest$p.value <- pval
     } else {
-      stats <- delong.unpaired.test(roc1, roc2)
+      delong.calcs <- delong.unpaired.calculations(roc1, roc2)
+      stats <- delong.unpaired.test(delong.calcs)
       stat <- stats[1]
       df <- stats[2]
+      stat.ci <- ci_delong_unpaired(delong.calcs, conf.level)
       htest$statistic <- c("D" = stat)
       htest$parameter <- c("df" = df)
       htest$method <- "DeLong's test for two ROC curves"
+      htest$conf.int <- c(stat.ci$lower, stat.ci$upper)
+      attr(htest$conf.int, "conf.level") <- stat.ci$level
 
       if (alternative == "two.sided") {
         pval <- 2 * pt(-abs(stat), df = df)
