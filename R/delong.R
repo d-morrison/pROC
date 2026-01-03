@@ -55,11 +55,11 @@ delong.unpaired.calculations <- function(roc1, roc2) {
   ntotS <- nS + mS
   
   d <- VR$theta - VS$theta
-  sig <- sqrt(SR + SS)
+  SSR <- sqrt(SR + SS)
   
   df <- (SR + SS)^2 / ((SR^2 / (ntotR - 1)) + (SS^2 / (ntotS - 1)))
   
-  return(list("d" = d, "sig" = sig, "df" = df))
+  return(list("d" = d, "sig" = SSR, "df" = df))
 }
 
 # Delong's test unpaired, used by roc.test.roc
