@@ -204,7 +204,7 @@ na.rm=TRUE, method=NULL, ...)
   DeLong \emph{et al.} (1988) for paired ROC curves, using the algorithm
   of Sun and Xu (2014). Only comparison of
   two ROC curves is implemented. The method has been extended for
-  unpaired ROC curves where the p-value is computed with an unpaired
+  unpaired ROC curves where the p-value and confidence interval are computed with an unpaired
   t-test with unequal sample size and unequal variance, with 
   \deqn{
     D=\frac{V^r(\theta^r) - V^s(\theta^s) }{ \sqrt{S^r + S^s}}

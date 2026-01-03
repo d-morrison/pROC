@@ -120,8 +120,9 @@ test_that("unpaired roc.test has confidence intervals", {
   expect_true(diff1 >= t1up$conf.int[1] && diff1 <= t1up$conf.int[2])
   
   # Verify specific CI values for t1up (regression test)
-  expect_equal(t1up$conf.int[1], -0.03377797, tolerance = 1e-6)
-  expect_equal(t1up$conf.int[2], 0.2183986, tolerance = 1e-6)
+  # Updated to use t-distribution instead of Gaussian
+  expect_equal(t1up$conf.int[1], -0.03452071, tolerance = 1e-6)
+  expect_equal(t1up$conf.int[2], 0.2191413, tolerance = 1e-6)
 })
 
 
