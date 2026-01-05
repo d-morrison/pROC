@@ -174,7 +174,9 @@ bootstrap.test <- function(roc1, roc2, test, x, paired, boot.n, boot.stratified,
     D <- 0
   } # special case: no difference between AUCs produces a NaN
 
-  return(D)
+  # Return both D and the bootstrap differences for CI calculation
+  result <- list(D = D, diffs = diffs)
+  return(result)
 }
 
 stratified.bootstrap.test <- function(n, roc1, roc2, test, x, paired, auc1skeleton, auc2skeleton) {
