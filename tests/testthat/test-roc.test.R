@@ -292,6 +292,12 @@ test_that("bootstrap roc.test has confidence intervals", {
   # Check that the difference falls within the CI
   diff_unpaired <- as.numeric(ht_unpaired$estimate[1] - ht_unpaired$estimate[2])
   expect_true(diff_unpaired >= ht_unpaired$conf.int[1] && diff_unpaired <= ht_unpaired$conf.int[2])
+  
+  # Verify specific CI values for unpaired bootstrap (regression test)
+  set.seed(2020)
+  expect_warning(ht_unpaired_fixed <- roc.test(r.s100b, r.wfns, method = "bootstrap", boot.n = 20, paired = FALSE), "paired")
+  expect_equal(ht_unpaired_fixed$conf.int[1], -0.24873814, tolerance = 1e-6)
+  expect_equal(ht_unpaired_fixed$conf.int[2], 0.01371528, tolerance = 1e-6)
 })
 
 

@@ -427,8 +427,9 @@ roc.test.roc <- function(roc1, roc2,
     htest$parameter <- parameter
 
     # Compute confidence interval from bootstrap differences
-    boot.ci <- quantile(boot.result$diffs, c((1 - conf.level) / 2, 1 - (1 - conf.level) / 2))
-    htest$conf.int <- c(boot.ci[1], boot.ci[2])
+    ci_probs <- c((1 - conf.level) / 2, 1 - (1 - conf.level) / 2)
+    boot.ci <- quantile(boot.result$diffs, ci_probs)
+    htest$conf.int <- unname(c(boot.ci[1], boot.ci[2]))
     attr(htest$conf.int, "conf.level") <- conf.level
 
     if (alternative == "two.sided") {
