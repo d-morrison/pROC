@@ -368,7 +368,7 @@ test_that("roc.test produces CIs with reuse.auc=TRUE for DeLong paired test", {
   ht <- roc.test(roc1, roc2, method = "delong", reuse.auc = TRUE)
   
   # Check that CI is present
-  expect_true(!is.null(ht$conf.int))
+  expect_false(is.null(ht$conf.int))
   expect_length(ht$conf.int, 2)
   expect_identical(attr(ht$conf.int, "conf.level"), 0.95)
   
@@ -391,7 +391,7 @@ test_that("roc.test produces CIs with reuse.auc=TRUE for DeLong unpaired test", 
   expect_warning(ht <- roc.test(roc1, roc2, method = "delong", paired = FALSE, reuse.auc = TRUE), "paired")
   
   # Check that CI is present
-  expect_true(!is.null(ht$conf.int))
+  expect_false(is.null(ht$conf.int))
   expect_length(ht$conf.int, 2)
   expect_identical(attr(ht$conf.int, "conf.level"), 0.95)
   
@@ -411,7 +411,7 @@ test_that("roc.test produces CIs with reuse.auc=TRUE for bootstrap test", {
   ht <- roc.test(roc1, roc2, method = "bootstrap", boot.n = 20, reuse.auc = TRUE)
   
   # Check that CI is present
-  expect_true(!is.null(ht$conf.int))
+  expect_false(is.null(ht$conf.int))
   expect_length(ht$conf.int, 2)
   expect_identical(attr(ht$conf.int, "conf.level"), 0.95)
   
@@ -430,7 +430,7 @@ test_that("roc.test produces CIs with reuse.auc=TRUE at different confidence lev
     ht <- roc.test(roc1, roc2, method = "delong", reuse.auc = TRUE, conf.level = conf.level)
     
     # Check that CI is present and has correct level
-    expect_true(!is.null(ht$conf.int))
+    expect_false(is.null(ht$conf.int))
     expect_length(ht$conf.int, 2)
     expect_identical(attr(ht$conf.int, "conf.level"), conf.level)
     
