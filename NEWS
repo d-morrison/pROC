@@ -1,7 +1,7 @@
 1.19.0.1 (2025-07-31)
   * Move 'fun.sesp' definition to work around LudvigOlsen/cvms#44
   * Implemented confidence intervals for unpaired data in `roc.test()` with DeLong's method
-  * Implemented confidence intervals for bootstrap `roc.test()` (suggested by https://github.com/xrobin/pROC/issues/73#issuecomment-3707157241)
+  * Implemented confidence intervals for bootstrap `roc.test()` (as proposed by @wzbillings in https://github.com/xrobin/pROC/issues/73#issuecomment-3707157241)
 
 1.19.0 (2025-07-30)
   * 'ci.coords' can now take the same 'input' values as 'coords' (issue #90)
