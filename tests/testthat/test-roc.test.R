@@ -358,3 +358,84 @@ test_that("se/sp roc.test works with mixed roc, auc and smooth.roc objects", {
     }
   }
 })
+
+test_that("roc.test produces CIs with reuse.auc=TRUE for DeLong paired test", {
+  # Create ROC curves with pre-computed AUCs (match the order used in existing tests)
+  roc1 <- roc(aSAH$outcome, aSAH$wfns, quiet = TRUE)
+  roc2 <- roc(aSAH$outcome, aSAH$s100b, quiet = TRUE)
+  
+  # Explicitly test with reuse.auc=TRUE (the default)
+  ht <- roc.test(roc1, roc2, method = "delong", reuse.auc = TRUE)
+  
+  # Check that CI is present
+  expect_true(!is.null(ht$conf.int))
+  expect_length(ht$conf.int, 2)
+  expect_identical(attr(ht$conf.int, "conf.level"), 0.95)
+  
+  # Verify CI values match expected values (regression test)
+  # These should match the values from the existing test for t1
+  expect_equal(ht$conf.int[1], 0.0104061769564846, tolerance = 1e-6)
+  expect_equal(ht$conf.int[2], 0.174214419249478, tolerance = 1e-6)
+  
+  # Check that the difference falls within the CI
+  diff <- as.numeric(ht$estimate[1] - ht$estimate[2])
+  expect_true(diff >= ht$conf.int[1] && diff <= ht$conf.int[2])
+})
+
+test_that("roc.test produces CIs with reuse.auc=TRUE for DeLong unpaired test", {
+  # Create ROC curves with pre-computed AUCs (match the order used in existing tests)
+  roc1 <- roc(aSAH$outcome, aSAH$wfns, quiet = TRUE)
+  roc2 <- roc(aSAH$outcome, aSAH$s100b, quiet = TRUE)
+  
+  # Test unpaired with reuse.auc=TRUE
+  expect_warning(ht <- roc.test(roc1, roc2, method = "delong", paired = FALSE, reuse.auc = TRUE), "paired")
+  
+  # Check that CI is present
+  expect_true(!is.null(ht$conf.int))
+  expect_length(ht$conf.int, 2)
+  expect_identical(attr(ht$conf.int, "conf.level"), 0.95)
+  
+  # Check that the difference falls within the CI
+  diff <- as.numeric(ht$estimate[1] - ht$estimate[2])
+  expect_true(diff >= ht$conf.int[1] && diff <= ht$conf.int[2])
+})
+
+test_that("roc.test produces CIs with reuse.auc=TRUE for bootstrap test", {
+  skip_slow()
+  
+  # Create ROC curves with pre-computed AUCs (match the order used in existing tests)
+  roc1 <- roc(aSAH$outcome, aSAH$wfns, quiet = TRUE)
+  roc2 <- roc(aSAH$outcome, aSAH$s100b, quiet = TRUE)
+  
+  # Test with bootstrap method and reuse.auc=TRUE
+  ht <- roc.test(roc1, roc2, method = "bootstrap", boot.n = 20, reuse.auc = TRUE)
+  
+  # Check that CI is present
+  expect_true(!is.null(ht$conf.int))
+  expect_length(ht$conf.int, 2)
+  expect_identical(attr(ht$conf.int, "conf.level"), 0.95)
+  
+  # Check that the difference falls within the CI
+  diff <- as.numeric(ht$estimate[1] - ht$estimate[2])
+  expect_true(diff >= ht$conf.int[1] && diff <= ht$conf.int[2])
+})
+
+test_that("roc.test produces CIs with reuse.auc=TRUE at different confidence levels", {
+  # Create ROC curves with pre-computed AUCs (match the order used in existing tests)
+  roc1 <- roc(aSAH$outcome, aSAH$wfns, quiet = TRUE)
+  roc2 <- roc(aSAH$outcome, aSAH$s100b, quiet = TRUE)
+  
+  # Test with different confidence levels
+  for (conf.level in c(0.90, 0.95, 0.99)) {
+    ht <- roc.test(roc1, roc2, method = "delong", reuse.auc = TRUE, conf.level = conf.level)
+    
+    # Check that CI is present and has correct level
+    expect_true(!is.null(ht$conf.int))
+    expect_length(ht$conf.int, 2)
+    expect_identical(attr(ht$conf.int, "conf.level"), conf.level)
+    
+    # Check that the difference falls within the CI
+    diff <- as.numeric(ht$estimate[1] - ht$estimate[2])
+    expect_true(diff >= ht$conf.int[1] && diff <= ht$conf.int[2])
+  }
+})
