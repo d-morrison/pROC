@@ -271,6 +271,36 @@ test_that("unpaired, non stratified roc.test works with bootstrap", {
   expect_equal(unname(ht$parameter), c(12, 0))
 })
 
+test_that("bootstrap roc.test has confidence intervals", {
+  skip_slow()
+  # Test paired bootstrap CI
+  ht_paired <- roc.test(r.wfns, r.s100b, method = "bootstrap", boot.n = 20, paired = TRUE)
+  expect_true(!is.null(ht_paired$conf.int))
+  expect_length(ht_paired$conf.int, 2)
+  expect_identical(attr(ht_paired$conf.int, "conf.level"), 0.95)
+  
+  # Check that the difference falls within the CI
+  diff_paired <- as.numeric(ht_paired$estimate[1] - ht_paired$estimate[2])
+  expect_true(diff_paired >= ht_paired$conf.int[1] && diff_paired <= ht_paired$conf.int[2])
+  
+  # Test unpaired bootstrap CI
+  expect_warning(ht_unpaired <- roc.test(r.s100b, r.wfns, method = "bootstrap", boot.n = 20, paired = FALSE), "paired")
+  expect_true(!is.null(ht_unpaired$conf.int))
+  expect_length(ht_unpaired$conf.int, 2)
+  expect_identical(attr(ht_unpaired$conf.int, "conf.level"), 0.95)
+  
+  # Check that the difference falls within the CI
+  diff_unpaired <- as.numeric(ht_unpaired$estimate[1] - ht_unpaired$estimate[2])
+  expect_true(diff_unpaired >= ht_unpaired$conf.int[1] && diff_unpaired <= ht_unpaired$conf.int[2])
+  
+  # Verify specific CI values for unpaired bootstrap (regression test)
+  set.seed(2020)
+  expect_warning(ht_unpaired_fixed <- roc.test(r.s100b, r.wfns, method = "bootstrap", boot.n = 20, paired = FALSE), "paired")
+  expect_equal(ht_unpaired_fixed$conf.int[1], -0.24873814, tolerance = 1e-6)
+  expect_equal(ht_unpaired_fixed$conf.int[2], 0.01371528, tolerance = 1e-6)
+})
+
+
 test_that("bootstrap roc.test works with mixed roc, auc and smooth.roc objects", {
   skip_slow()
   for (roc1 in list(r.s100b, auc(r.s100b), smooth(r.s100b), r.s100b.partial2, r.s100b.partial2$auc)) {
